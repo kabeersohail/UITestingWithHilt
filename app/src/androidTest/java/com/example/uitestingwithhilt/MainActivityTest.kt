@@ -3,8 +3,7 @@ package com.example.uitestingwithhilt
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert
@@ -26,6 +25,12 @@ class MainActivityTest {
     fun test_if_main_activity_is_visible() {
         ActivityScenario.launch(MainActivity::class.java)
         onView(withId(R.id.main_activity_layout)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_if_main_activity_text_matches_as_expected() {
+        ActivityScenario.launch(MainActivity::class.java)
+        onView(withId(R.id.main_activity_text)).check(matches(withText(R.string.main_activity)))
     }
 
 }

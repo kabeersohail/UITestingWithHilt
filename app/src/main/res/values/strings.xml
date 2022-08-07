@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">UITestingWithHilt</string>
+    <string name="main_activity">Main Activity</string>
 </resources>
