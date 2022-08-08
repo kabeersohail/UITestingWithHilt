@@ -13,7 +13,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withContext
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -58,16 +57,22 @@ class MainActivityTest {
         onView(withId(R.id.main_activity_text)).check(matches(withText(R.string.main_activity)))
     }
 
+    /**
+     * Collection must happen before emission, or else the command will not be collected (used shared flow -> hot flow)
+     *
+     * But if replay is used, then the collection can happen before emission. replay will be cached based on the size.
+     *
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testThatCollectorIsCalled() = runTest {
 
         activityScenarioRule.scenario.onActivity {
 
-            val jobCollect = this.launch{ commandScheduler.collectCommand() }
+            val jobEmit = this.launch { commandScheduler.emitCommand(Command.KIOSK) }
             advanceUntilIdle()
 
-            val jobEmit = this.launch { commandScheduler.emitCommand(Command.KIOSK) }
+            val jobCollect = this.launch{ commandScheduler.collectCommand() }
             advanceUntilIdle()
 
             jobCollect.cancel()

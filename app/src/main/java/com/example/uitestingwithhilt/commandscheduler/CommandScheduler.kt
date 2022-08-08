@@ -11,7 +11,7 @@ class CommandScheduler @Inject constructor() {
 
     val deviceState: DeviceState = DeviceState()
 
-    private val _commandFlow: MutableSharedFlow<Command> = MutableSharedFlow()
+    private val _commandFlow: MutableSharedFlow<Command> = MutableSharedFlow(replay = 1)
     private val commandFlow: SharedFlow<Command> = _commandFlow.asSharedFlow()
 
     suspend fun emitCommand(command: Command) = _commandFlow.emit(command)
