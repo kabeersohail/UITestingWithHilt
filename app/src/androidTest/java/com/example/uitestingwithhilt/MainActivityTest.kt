@@ -72,13 +72,13 @@ class MainActivityTest {
             val jobEmit = this.launch { commandScheduler.emitCommand(Command.KIOSK) }
             advanceUntilIdle()
 
-            val jobCollect = this.launch{ commandScheduler.collectCommand() }
+            val jobCollect = this.launch{ it.obeyCommand(commandScheduler.commandFlow) }
             advanceUntilIdle()
 
             jobCollect.cancel()
             jobEmit.cancel()
 
-            Assert.assertEquals(commandScheduler.deviceState.kioskLockState, KioskLockState.Locked)
+            Assert.assertEquals(it.deviceState.kioskLockState, KioskLockState.Locked)
         }
     }
 
